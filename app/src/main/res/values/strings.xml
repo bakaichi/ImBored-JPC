@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ImBored-JPC</string>
+    <string name="button_addActivity">Add Activity</string>
+    <string name="text_Title">Title</string>
+    <string name="text_titleHint">Enter Title</string>
+    <string name="activityTitle">Im So Bored</string>
+    <string name="activitySubtitle">Please Contribute</string>
+    <string name="contributeButton">Contribute</string>
+    <string name="total">Total</string>
+    <string name="enter_message">Enter Description\n</string>
+    <string name="reportTitle">List of Activities</string>
+    <string name="empty_list">No Activities Yet - Go add an Activity!</string>
+</resources>
