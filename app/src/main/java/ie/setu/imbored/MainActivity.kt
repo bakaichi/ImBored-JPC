@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import ie.setu.imbored.models.ActivityModel
+import dagger.hilt.android.AndroidEntryPoint
 import ie.setu.imbored.navigation.NavHostProvider
 import ie.setu.imbored.navigation.Report
 import ie.setu.imbored.navigation.allDestinations
@@ -21,6 +21,7 @@ import ie.setu.imbored.ui.components.general.TopAppBarProvider
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 import timber.log.Timber
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,16 +29,12 @@ class MainActivity : ComponentActivity() {
         Timber.i("ImBored MainActivity started..")
         setContent {
             ImBoredJPCTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    ImBoredApp()
-                }
+                ImBoredApp()
             }
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -46,8 +43,6 @@ fun ImBoredApp(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
-    val activities = remember { mutableStateListOf<ActivityModel>() }
-
     val currentNavBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentNavBackStackEntry?.destination
     val currentBottomScreen = allDestinations.find { it.route == currentDestination?.route } ?: Report
@@ -65,8 +60,7 @@ fun ImBoredApp(
             NavHostProvider(
                 modifier = modifier,
                 navController = navController,
-                paddingValues = paddingValues,
-                activities = activities
+                paddingValues = paddingValues
             )
         },
         bottomBar = {

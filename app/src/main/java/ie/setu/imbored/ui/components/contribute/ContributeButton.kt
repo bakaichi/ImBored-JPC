@@ -17,9 +17,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import ie.setu.imbored.R
 import ie.setu.imbored.models.ActivityModel
 import ie.setu.imbored.models.fakeActivities
+import ie.setu.imbored.ui.screens.contribute.ContributeViewModel
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 import timber.log.Timber
 
@@ -27,7 +29,7 @@ import timber.log.Timber
 fun ContributeButton(
     modifier: Modifier = Modifier,
     activity: ActivityModel,
-    activities: SnapshotStateList<ActivityModel>,
+    contributeViewModel: ContributeViewModel = hiltViewModel(),
     onTotalContributedChange: (Int) -> Unit
 ) {
     var totalContributed by remember { mutableIntStateOf(0) }
@@ -42,9 +44,12 @@ fun ContributeButton(
             onClick = {
                 totalContributed += activity.contributionAmount
                 onTotalContributedChange(totalContributed)
-                activities.add(activity)
+
+                // Add the activity to the database via ContributeViewModel
+                contributeViewModel.insert(activity)
+
                 Timber.i("Activity added: $activity")
-                Timber.i("Contribution list info: ${activities.toList()}")
+                Timber.i("Total contributed amount: $totalContributed")
             },
             elevation = ButtonDefaults.buttonElevation(20.dp)
         ) {
@@ -86,6 +91,7 @@ fun ContributeButton(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun ContributeButtonPreview() {
@@ -93,8 +99,8 @@ fun ContributeButtonPreview() {
         ContributeButton(
             modifier = Modifier,
             activity = ActivityModel(),
-            activities = fakeActivities.toMutableStateList(),
             onTotalContributedChange = {}
         )
     }
 }
+

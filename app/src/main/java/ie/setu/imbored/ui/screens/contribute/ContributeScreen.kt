@@ -1,28 +1,27 @@
-package ie.setu.imbored.ui.screens
+package ie.setu.imbored.ui.screens.contribute
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import ie.setu.imbored.models.ActivityModel
 import ie.setu.imbored.models.fakeActivities
-import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 import ie.setu.imbored.ui.components.contribute.*
+import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 
 @SuppressLint("AutoboxingStateCreation")
 @Composable
-fun ScreenContribute(
+fun ContributeScreen(
     modifier: Modifier = Modifier,
-    activities: SnapshotStateList<ActivityModel>
+    contributeViewModel: ContributeViewModel = hiltViewModel() // Use HiltViewModel
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -117,9 +116,8 @@ fun ScreenContribute(
                 description = description,
                 category = selectedCategory,
                 dateTime = dateTime,
-                capacity = capacity
+                capacity = capacity,
             ),
-            activities = activities,
             onTotalContributedChange = { /* Handle Contribution Logic */ }
         )
     }
@@ -129,9 +127,8 @@ fun ScreenContribute(
 @Composable
 fun ContributeScreenPreview() {
     ImBoredJPCTheme {
-        ScreenContribute(
-            modifier = Modifier,
-            activities = fakeActivities.toMutableStateList()
+        ContributeScreen(
+            modifier = Modifier
         )
     }
 }
