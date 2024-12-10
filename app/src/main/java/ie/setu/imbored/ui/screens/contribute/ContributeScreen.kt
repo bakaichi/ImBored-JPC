@@ -21,7 +21,7 @@ import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 @Composable
 fun ContributeScreen(
     modifier: Modifier = Modifier,
-    contributeViewModel: ContributeViewModel = hiltViewModel() // Use HiltViewModel
+    contributeViewModel: ContributeViewModel = hiltViewModel()
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }

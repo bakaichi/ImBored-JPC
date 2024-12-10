@@ -8,13 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import ie.setu.imbored.models.ActivityModel
-import ie.setu.imbored.ui.components.report.ActivityCardList
-import ie.setu.imbored.ui.components.general.Centre
-import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 import ie.setu.imbored.models.fakeActivities
+import ie.setu.imbored.ui.components.report.ActivityCardList
+import ie.setu.imbored.ui.theme.ImBoredJPCTheme
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun ReportScreen(
@@ -31,7 +29,10 @@ fun ReportScreen(
                 modifier = Modifier.fillMaxSize()
             )
         } else {
-            ActivityCardList(activities = activities)
+            ActivityCardList(
+                activities = activities,
+                onDeleteActivity = { activity -> reportViewModel.deleteActivity(activity) }
+            )
         }
     }
 }
@@ -59,8 +60,10 @@ fun PreviewReportScreen(
                 style = MaterialTheme.typography.bodyLarge
             )
         } else {
-            ActivityCardList(activities = activities)
+            ActivityCardList(
+                activities = activities,
+                onDeleteActivity = {}
+            )
         }
     }
 }
-

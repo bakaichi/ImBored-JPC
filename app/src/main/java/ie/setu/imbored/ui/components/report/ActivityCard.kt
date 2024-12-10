@@ -3,6 +3,7 @@ package ie.setu.imbored.ui.components.report
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Event
@@ -15,12 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.font.FontWeight
 import ie.setu.imbored.models.ActivityModel
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
+import showDeleteAlert
 import java.text.DateFormat
 import java.util.*
 
 @Composable
-fun ActivityCard(activity: ActivityModel) {
+fun ActivityCard(activity: ActivityModel, onClickDelete: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
+    var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
     Card(
         colors = CardDefaults.cardColors(
@@ -64,6 +67,10 @@ fun ActivityCard(activity: ActivityModel) {
                         text = "Description: ${activity.description}",
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
+                    // Delete Button
+                    FilledTonalIconButton(onClick = { showDeleteConfirmDialog = true }) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Delete Activity")
+                    }
                 }
             }
             IconButton(onClick = { expanded = !expanded }) {
@@ -73,8 +80,21 @@ fun ActivityCard(activity: ActivityModel) {
                 )
             }
         }
+
+        // Show Confirmation Dialog
+        if (showDeleteConfirmDialog) {
+            showDeleteAlert(
+                onDismiss = { showDeleteConfirmDialog = false },
+                onDelete = {
+                    onClickDelete()
+                    showDeleteConfirmDialog = false
+                }
+            )
+        }
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -86,7 +106,8 @@ fun ActivityCardPreview() {
                 description = "A community-organized pub crawl to meet new friends.",
                 category = "Social",
                 dateTime = DateFormat.getDateTimeInstance().format(Date())
-            )
+            ),
+            onClickDelete = {}
         )
     }
 }

@@ -10,4 +10,8 @@
     <string name="enter_message">Enter Description\n</string>
     <string name="reportTitle">List of Activities</string>
     <string name="empty_list">No Activities Yet - Go add an Activity!</string>
+    <string name="confirm_delete">Confirm Delete?</string>
+    <string name="confirm_delete_message">Are you sure you want to delete this activity?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

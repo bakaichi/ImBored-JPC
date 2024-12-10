@@ -25,4 +25,10 @@ class ReportViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteActivity(activity: ActivityModel) {
+        viewModelScope.launch {
+            repository.delete(activity)
+        }
+    }
 }
