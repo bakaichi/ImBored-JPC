@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun ReportScreen(
     modifier: Modifier = Modifier,
+    onClickDetails: (Int) -> Unit,
     reportViewModel: ReportViewModel = hiltViewModel()
 ) {
     val activities = reportViewModel.uiActivities.collectAsState().value
@@ -31,11 +32,13 @@ fun ReportScreen(
         } else {
             ActivityCardList(
                 activities = activities,
-                onDeleteActivity = { activity -> reportViewModel.deleteActivity(activity) }
+                onDeleteActivity = { activity -> reportViewModel.deleteActivity(activity) },
+                onClickDetails = onClickDetails
             )
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -62,7 +65,8 @@ fun PreviewReportScreen(
         } else {
             ActivityCardList(
                 activities = activities,
-                onDeleteActivity = {}
+                onDeleteActivity = {},
+                onClickDetails = {}
             )
         }
     }

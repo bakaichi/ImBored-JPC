@@ -17,4 +17,10 @@ interface ActivityDAO {
 
     @Delete
     suspend fun delete(activity: ActivityModel)
+
+    @Query("SELECT * FROM activity_table WHERE id=:id")
+    fun getActivity(id: Int): Flow<ActivityModel>
+
+    @Query("UPDATE activity_table SET description=:description WHERE id = :id")
+    suspend fun updateDescription(id: Int, description: String)
 }

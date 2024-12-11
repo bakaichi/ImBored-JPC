@@ -15,4 +15,10 @@ class ActivityRepository @Inject constructor(
     suspend fun update(activity: ActivityModel) = activityDAO.update(activity)
 
     suspend fun delete(activity: ActivityModel) = activityDAO.delete(activity)
+
+    fun get(id: Int): Flow<ActivityModel> = activityDAO.getActivity(id)
+
+    suspend fun updateDescription(id: Int, description: String) {
+        activityDAO.updateDescription(id, description)
+    }
 }

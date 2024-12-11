@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ie.setu.imbored.ui.screens.contribute.ContributeScreen
+import ie.setu.imbored.ui.screens.details.DetailsScreen
 import ie.setu.imbored.ui.screens.report.ReportScreen
 
 @Composable
@@ -25,7 +26,19 @@ fun NavHostProvider(
             ContributeScreen(modifier = modifier)
         }
         composable(route = Report.route) {
-            ReportScreen(modifier = modifier)
+            ReportScreen(
+                modifier = modifier,
+                onClickDetails = { id -> navController.navigate("details/$id") }
+            )
+        }
+        composable(
+            route = Details.route,
+            arguments = Details.arguments
+        ) { navBackStackEntry ->
+            val id = navBackStackEntry.arguments?.getInt(Details.idArg)
+            if (id != null) {
+                DetailsScreen(id = id)
+            }
         }
     }
 }

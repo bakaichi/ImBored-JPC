@@ -1,6 +1,7 @@
 package ie.setu.imbored.ui.components.report
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -11,8 +12,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
 import ie.setu.imbored.models.ActivityModel
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
@@ -21,7 +22,11 @@ import java.text.DateFormat
 import java.util.*
 
 @Composable
-fun ActivityCard(activity: ActivityModel, onClickDelete: () -> Unit) {
+fun ActivityCard(
+    activity: ActivityModel,
+    onClickDelete: () -> Unit,
+    onClickDetails: () -> Unit // Add this parameter
+) {
     var expanded by remember { mutableStateOf(false) }
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
@@ -32,6 +37,7 @@ fun ActivityCard(activity: ActivityModel, onClickDelete: () -> Unit) {
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 4.dp)
             .fillMaxWidth()
+            .clickable { onClickDetails() }
     ) {
         Row(
             modifier = Modifier
@@ -94,8 +100,6 @@ fun ActivityCard(activity: ActivityModel, onClickDelete: () -> Unit) {
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun ActivityCardPreview() {
@@ -107,7 +111,8 @@ fun ActivityCardPreview() {
                 category = "Social",
                 dateTime = DateFormat.getDateTimeInstance().format(Date())
             ),
-            onClickDelete = {}
+            onClickDelete = {},
+            onClickDetails = {} // Preview for details click
         )
     }
 }

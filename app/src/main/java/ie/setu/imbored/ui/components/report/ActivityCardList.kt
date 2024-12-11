@@ -15,16 +15,14 @@ import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 fun ActivityCardList(
     activities: List<ActivityModel>,
     onDeleteActivity: (ActivityModel) -> Unit,
-    modifier: Modifier = Modifier
+    onClickDetails: (Int) -> Unit
 ) {
-    LazyColumn(modifier = modifier.padding(horizontal = 4.dp)) {
-        items(
-            items = activities,
-            key = { activity -> activity.id }
-        ) { activity ->
+    LazyColumn {
+        items(activities) { activity ->
             ActivityCard(
                 activity = activity,
-                onClickDelete = { onDeleteActivity(activity) }
+                onClickDelete = { onDeleteActivity(activity) },
+                onClickDetails = { onClickDetails(activity.id) }
             )
         }
     }
@@ -36,7 +34,8 @@ fun ActivityCardListPreview() {
     ImBoredJPCTheme {
         ActivityCardList(
             activities = fakeActivities,
-            onDeleteActivity = {}
+            onDeleteActivity = {},
+            onClickDetails = {}
         )
     }
 }
