@@ -23,10 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 
 @Composable
-fun DropDownMenu() {
+fun DropDownMenu(navController : NavController) {
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf("Help") }
@@ -64,16 +65,17 @@ fun DropDownMenu() {
                 onClick = {
                     selectedOptionText = "Info"
                     expanded = false
+                    navController.navigate("report")
                 },
             )
         }
     }
 }
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun DropDownMenuPreview() {
     ImBoredJPCTheme  {
         DropDownMenu()
     }
-}
+}*/
