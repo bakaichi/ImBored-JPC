@@ -28,18 +28,18 @@ fun NavHostProvider(
         modifier = Modifier.padding(paddingValues = paddingValues)
     ) {
         // Login Screen
-        composable(route = "login") {
+        composable(route = Login.route) {
             LoginScreen(
                 navController = navController,
-                onLogin = { navController.navigate("home") { popUpTo("login") { inclusive = true } } }
+                onLogin = { navController.popBackStack() }
             )
         }
 
         // Register Screen
-        composable(route = "register") {
+        composable(route = Register.route) {
             RegisterScreen(
                 navController = navController,
-                onRegister = { navController.navigate("home") { popUpTo("register") { inclusive = true } } }
+                onRegister = { navController.popBackStack() }
             )
         }
 
@@ -72,14 +72,14 @@ fun NavHostProvider(
             }
         }
         // Profile Screen with Logout Logic
-        composable(route = "profile") {
+        composable(route = Profile.route) {
             ProfileScreen(
                 onSignOut = {
                     navController.popBackStack()
-                    navController.navigate("login") {
-                        popUpTo("home") { inclusive = true }
+                    navController.navigate(Login.route) {
+                        popUpTo(Home.route) { inclusive = true }
                     }
-                }
+                },
             )
         }
     }
