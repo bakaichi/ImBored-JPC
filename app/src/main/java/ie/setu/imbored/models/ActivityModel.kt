@@ -2,6 +2,7 @@ package ie.setu.imbored.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.firebase.firestore.DocumentId
 import java.text.DateFormat
 import java.util.Date
 
@@ -9,13 +10,16 @@ import java.util.Date
 data class ActivityModel(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    @DocumentId val _id: String = "N/A",
     var title: String = "",
     var description: String = "",
     var category: String = "",
     var dateTime: String? = null,
     var capacity: Int = 0,
     var contributionAmount: Int = 0,
-    val dateContributed: Date = Date()
+    val dateContributed: Date = Date(),
+    var email: String = "aidas@mail.com",
+    val dateModified: Date = Date()
 )
 
 val fakeActivities = List(30) { i ->

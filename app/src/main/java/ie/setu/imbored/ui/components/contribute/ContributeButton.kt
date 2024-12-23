@@ -5,7 +5,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ie.setu.imbored.R
 import ie.setu.imbored.models.ActivityModel
-import ie.setu.imbored.models.fakeActivities
 import ie.setu.imbored.ui.screens.contribute.ContributeViewModel
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 import timber.log.Timber
@@ -45,7 +43,6 @@ fun ContributeButton(
                 totalContributed += activity.contributionAmount
                 onTotalContributedChange(totalContributed)
 
-                // Add the activity to the database via ContributeViewModel
                 contributeViewModel.insert(activity)
 
                 Timber.i("Activity added: $activity")
