@@ -35,7 +35,7 @@ object Details : AppDestination {
     override val label = "Details"
     const val idArg = "id"
     override val route = "details/{$idArg}"
-    val arguments = listOf(navArgument(idArg) { type = NavType.IntType })
+    val arguments = listOf(navArgument(idArg) { type = NavType.StringType })
 }
 
 object Home : AppDestination {

@@ -50,12 +50,14 @@ fun NavHostProvider(
 
         // Report Screen
         composable(route = Report.route) {
-            ReportScreen(
-                modifier = modifier,
-                onClickDetails = { id -> navController.navigate("details/$id") }
+            //call our 'Report' Screen Here
+            ReportScreen(modifier = modifier,
+                onClickDetails = {
+                        activityId : String ->
+                    navController.navigateToActivityDetails(activityId)
+                },
             )
         }
-
         // Contribute Screen
         composable(route = "contribute") {
             ContributeScreen(modifier = modifier)
@@ -65,11 +67,12 @@ fun NavHostProvider(
         composable(
             route = Details.route,
             arguments = Details.arguments
-        ) { navBackStackEntry ->
-            val id = navBackStackEntry.arguments?.getInt(Details.idArg)
-            if (id != null) {
-                DetailsScreen(id = id)
-            }
+        ) { backStackEntry ->
+            val idArg = backStackEntry.arguments?.getString(Details.idArg) ?: ""
+            DetailsScreen(
+                modifier = modifier,
+                activityId = idArg
+            )
         }
         // Profile Screen with Logout Logic
         composable(route = Profile.route) {
@@ -83,4 +86,7 @@ fun NavHostProvider(
             )
         }
     }
+}
+private fun NavHostController.navigateToActivityDetails(activityId: String) {
+    this.navigate("details/$activityId")
 }

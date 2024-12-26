@@ -23,9 +23,9 @@ class ReportViewModel @Inject constructor(
     private val _activities = MutableStateFlow<List<ActivityModel>>(emptyList())
     val uiActivities: StateFlow<List<ActivityModel>> = _activities.asStateFlow()
 
-    private var error = mutableStateOf<Exception?>(null)
-    private var iserror = mutableStateOf(false)
-    private var isloading = mutableStateOf(false)
+    var error = mutableStateOf<Exception?>(null)
+    var iserror = mutableStateOf(false)
+    var isloading = mutableStateOf(false)
 
     init {
         getActivities()
