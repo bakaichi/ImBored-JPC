@@ -14,6 +14,7 @@ interface AuthService {
     val isUserAuthenticatedInFirebase: Boolean
     val email: String?
     val customPhotoUri: Uri?
+    suspend fun updatePhoto(uri: Uri) : FirebaseSignInResponse
 
     suspend fun authenticateUser(email: String, password: String)
             : FirebaseSignInResponse

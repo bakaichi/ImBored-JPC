@@ -1,5 +1,6 @@
 package ie.setu.imbored.ui.screens.profile
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -20,5 +21,9 @@ class ProfileViewModel @Inject constructor(
 
     fun signOut() {
         viewModelScope.launch { authService.signOut() }
+    }
+
+    fun updatePhotoUri(uri: Uri) {
+        viewModelScope.launch { authService.updatePhoto(uri) }
     }
 }

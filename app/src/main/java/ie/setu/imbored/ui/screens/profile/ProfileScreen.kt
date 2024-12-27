@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ie.setu.imbored.R
 import ie.setu.imbored.ui.components.general.HeadingTextComponent
+import ie.setu.imbored.ui.components.general.ShowPhotoPicker
 import ie.setu.imbored.ui.screens.login.LoginViewModel
 import ie.setu.imbored.ui.screens.register.RegisterViewModel
 
@@ -31,7 +33,7 @@ fun ProfileScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
     registerViewModel: RegisterViewModel = hiltViewModel()
 ) {
-    val photoUri: Uri? by remember { mutableStateOf(profileViewModel.photoUri) }
+    var photoUri: Uri? by remember { mutableStateOf(profileViewModel.photoUri) }
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,6 +48,12 @@ fun ProfileScreen(
                 displayName = profileViewModel.displayName,
                 email = profileViewModel.email
             )
+        ShowPhotoPicker(
+            onPhotoUriChanged = {
+                photoUri = it
+                profileViewModel.updatePhotoUri(photoUri!!)
+            }
+        )
         Button(
             onClick = {
                 profileViewModel.signOut()

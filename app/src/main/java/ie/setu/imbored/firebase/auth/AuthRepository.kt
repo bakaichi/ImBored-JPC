@@ -86,4 +86,18 @@ class AuthRepository
             Response.Failure(e)
         }
     }
+
+    override suspend fun updatePhoto(uri: Uri) : FirebaseSignInResponse {
+        return try {
+            currentUser!!.updateProfile(UserProfileChangeRequest
+                .Builder()
+                .setPhotoUri(uri)
+                .build()).await()
+            return Response.Success(currentUser!!)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Response.Failure(e)
+        }
+    }
+
 }
