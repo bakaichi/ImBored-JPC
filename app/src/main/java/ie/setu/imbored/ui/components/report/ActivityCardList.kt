@@ -1,5 +1,6 @@
 package ie.setu.imbored.ui.components.report
 
+import android.net.Uri
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -19,7 +20,8 @@ fun ActivityCardList(
             ActivityCard(
                 activity = activity,
                 onClickDelete = { onDeleteActivity(activity) },
-                onClickDetails = { onClickDetails(activity._id)  }
+                onClickDetails = { onClickDetails(activity._id)  },
+                photoUri = Uri.parse(activity.imageUri)
             )
         }
     }

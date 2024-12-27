@@ -31,16 +31,18 @@ class FirestoreRepository
             .document(activityId).get().await().toObject()
     }
 
-    override suspend fun insert(email: String,
-                                activity: Activity)
-    {
-        val activityWithEmail = activity.copy(email = email)
+    override suspend fun insert(email: String, activity: Activity) {
+        val activityWithEmailAndImage =
+            activity.copy(
+                email = email,
+                imageUri = auth.customPhotoUri!!.toString()
+            )
 
         firestore.collection(ACTIVITY_COLLECTION)
-            .add(activityWithEmail)
+            .add(activityWithEmailAndImage)
             .await()
-
     }
+
 
     override suspend fun update(email: String,
                                 activity: Activity)
