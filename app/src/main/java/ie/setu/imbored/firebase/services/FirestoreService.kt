@@ -1,5 +1,6 @@
 package ie.setu.imbored.firebase.services
 
+import android.net.Uri
 import ie.setu.imbored.models.ActivityModel
 import kotlinx.coroutines.flow.Flow
 
@@ -13,4 +14,6 @@ interface FirestoreService {
     suspend fun insert(email: String, activity: Activity)
     suspend fun update(email: String, activity: Activity)
     suspend fun delete(email: String, activityId: String)
+    suspend fun updatePhotoUris(email: String, uri: Uri)
+
 }
