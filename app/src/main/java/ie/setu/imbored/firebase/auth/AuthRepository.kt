@@ -1,5 +1,6 @@
 package ie.setu.imbored.firebase.auth
 
+import android.net.Uri
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -27,6 +28,8 @@ class AuthRepository
     override val email: String?
         get() = firebaseAuth.currentUser?.email
 
+    override val customPhotoUri: Uri?
+        get() = firebaseAuth.currentUser?.photoUrl
 
     override suspend fun authenticateUser(email: String, password: String)
             : FirebaseSignInResponse {
@@ -39,13 +42,15 @@ class AuthRepository
             Response.Failure(e)
         }
     }
-    override suspend fun createUser(name: String, email: String, password: String)
-            : FirebaseSignInResponse {
+    override suspend fun createUser(name: String, email: String, password: String): FirebaseSignInResponse {
         return try {
-            val result = firebaseAuth
-                .createUserWithEmailAndPassword(email, password).await()
+            val uri = Uri.parse("android.resource://ie.setu.imbored/drawable/default_pp")
+            val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             result.user?.updateProfile(UserProfileChangeRequest
-                .Builder().setDisplayName(name).build())?.await()
+                .Builder()
+                .setDisplayName(name)
+                .setPhotoUri(uri)
+                .build())?.await()
             return Response.Success(result.user!!)
         } catch (e: Exception) {
             e.printStackTrace()

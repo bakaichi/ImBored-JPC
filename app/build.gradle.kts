@@ -102,4 +102,6 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.googleid)
 
+    // Coil
+    implementation(libs.coil.compose)
 }

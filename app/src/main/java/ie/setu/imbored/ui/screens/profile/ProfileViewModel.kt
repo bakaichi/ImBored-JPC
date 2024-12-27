@@ -15,7 +15,7 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
 
     val displayName get() = auth.currentUser?.displayName.toString()
-    val photoUrl get() = auth.currentUser?.photoUrl.toString()
+    val photoUri get() = authService.customPhotoUri
     val email get() = auth.currentUser?.email.toString()
 
     fun signOut() {

@@ -1,5 +1,6 @@
 package ie.setu.imbored.ui.screens.profile
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,9 +11,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,7 +31,7 @@ fun ProfileScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
     registerViewModel: RegisterViewModel = hiltViewModel()
 ) {
-
+    val photoUri: Uri? by remember { mutableStateOf(profileViewModel.photoUri) }
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -36,17 +39,13 @@ fun ProfileScreen(
     ) {
         HeadingTextComponent(value = stringResource(id = R.string.account_settings))
         Spacer(modifier = Modifier.height(10.dp))
-        //   if(loginViewModel.currentUser?.photoUrl?.path.isNullOrEmpty())
-        BasicContent(
-            displayName = profileViewModel.displayName,
-            email = profileViewModel.email
-        )
-//        else
-//            ProfileContent(
-//                photoUrl = profileViewModel.photoUrl,
-//                displayName = profileViewModel.displayName
-//        )
 
+        if(photoUri.toString().isNotEmpty())
+            ProfileContent(
+                photoUri = photoUri,
+                displayName = profileViewModel.displayName,
+                email = profileViewModel.email
+            )
         Button(
             onClick = {
                 profileViewModel.signOut()
@@ -55,11 +54,9 @@ fun ProfileScreen(
                 registerViewModel.resetRegisterFlow()
             },
             colors = ButtonDefaults.buttonColors(
-                contentColor = Color.White,
-                containerColor = MaterialTheme.colorScheme.tertiary
+                containerColor = MaterialTheme.colorScheme.primary
             ),
         ) {
             Text(text = "Logout")
         }
-    }
-}
+    }}
