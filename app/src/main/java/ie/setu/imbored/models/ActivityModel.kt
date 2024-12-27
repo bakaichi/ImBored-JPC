@@ -11,6 +11,7 @@ data class ActivityModel(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     @DocumentId val _id: String = "N/A",
+    var imageUri: String = "",
     var title: String = "",
     var description: String = "",
     var category: String = "",
