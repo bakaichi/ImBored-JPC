@@ -9,10 +9,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -47,12 +47,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ie.setu.imbored.R
+import ie.setu.imbored.data.rules.Constants.SIGN_IN_WITH_GOOGLE
 import ie.setu.imbored.ui.theme.*
+import timber.log.Timber
+
 
 @Preview
 @Composable
-fun DonationCardPreview() {
-    ImBoredJPCTheme {
+fun ActivityCardPreview() {
+    ImBoredJPCTheme  {
         Column {
             //HeadingTextComponent("A Heading")
             HeadingLogoComponent()
@@ -60,6 +63,62 @@ fun DonationCardPreview() {
         }
     }
 }
+
+
+@Composable
+fun GoogleSignInButtonComponent(onButtonClicked: () -> Unit) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(48.dp),
+        onClick = {
+            onButtonClicked.invoke()
+        },
+        contentPadding = PaddingValues(),
+        colors = ButtonDefaults.buttonColors(Color.Transparent),
+        shape = RoundedCornerShape(50.dp),
+        //enabled = isEnabled
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(48.dp)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            gStartGradientColor,
+                            gEndGradientColor,
+                        )
+                    ),
+                    shape = RoundedCornerShape(50.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Row {
+                Column {
+
+                    Image(
+                        modifier = Modifier.padding(end = 40.dp),
+                        painter = painterResource(
+                            id = R.drawable.ic_google_logo
+                        ),
+                        contentDescription = null
+                    )
+                }
+                Text(
+                    text = SIGN_IN_WITH_GOOGLE,
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic,
+                    modifier = Modifier.padding(end = 40.dp)
+                )
+            }
+        }
+
+    }
+}
+
 
 @Composable
 fun NormalTextComponent(value: String) {
@@ -283,7 +342,7 @@ fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit) {
 
         annotatedString.getStringAnnotations(offset, offset)
             .firstOrNull()?.also { span ->
-                Log.d("ClickableTextComponent", "{${span.item}}")
+                Timber.tag("ClickableTextComponent").d("{${span.item}}")
 
                 if ((span.item == termsAndConditionsText) || (span.item == privacyPolicyText)) {
                     onTextSelected(span.item)
