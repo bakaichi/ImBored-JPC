@@ -77,6 +77,13 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    //Location & Maps
+    implementation(libs.play.services.location)
+    implementation(libs.maps.compose)
+    implementation(libs.play.services.maps)
+
+    //Accompanist (Permission)
+    implementation(libs.accompanist.permissions)
     //ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
 

@@ -11,6 +11,7 @@ import ie.setu.imbored.ui.screens.contribute.ContributeScreen
 import ie.setu.imbored.ui.screens.details.DetailsScreen
 import ie.setu.imbored.ui.screens.home.HomeScreen
 import ie.setu.imbored.ui.screens.login.LoginScreen
+import ie.setu.imbored.ui.screens.map.MapScreen
 import ie.setu.imbored.ui.screens.profile.ProfileScreen
 import ie.setu.imbored.ui.screens.register.RegisterScreen
 import ie.setu.imbored.ui.screens.report.ReportScreen
@@ -85,6 +86,11 @@ fun NavHostProvider(
                 },
             )
         }
+        composable(route = Map.route) {
+            //call our 'Map' Screen Here
+            MapScreen()
+        }
+
     }
 }
 private fun NavHostController.navigateToActivityDetails(activityId: String) {
