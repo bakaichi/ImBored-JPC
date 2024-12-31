@@ -20,7 +20,9 @@ data class ActivityModel(
     var contributionAmount: Int = 0,
     val dateContributed: Date = Date(),
     var email: String = "aidas@mail.com",
-    val dateModified: Date = Date()
+    val dateModified: Date = Date(),
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0
 )
 
 val fakeActivities = List(30) { i ->

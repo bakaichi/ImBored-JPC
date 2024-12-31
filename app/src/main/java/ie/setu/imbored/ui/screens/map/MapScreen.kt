@@ -22,13 +22,16 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import ie.setu.imbored.ui.components.general.CustomMarker
+import ie.setu.imbored.ui.screens.report.ReportViewModel
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 import timber.log.Timber
 
 @Composable
 fun MapScreen(
     mapViewModel: MapViewModel = hiltViewModel(),
-) {
+    reportViewModel: ReportViewModel = hiltViewModel()
+    ) {
     val uiSettings by remember { mutableStateOf(MapUiSettings(
         myLocationButtonEnabled = true,
         compassEnabled = true,
@@ -41,6 +44,8 @@ fun MapScreen(
             isMyLocationEnabled = true
         ))
     }
+
+    val activities = reportViewModel.uiActivities.collectAsState().value
 
     val currentLocation = mapViewModel.currentLatLng.collectAsState().value
 
@@ -67,6 +72,15 @@ fun MapScreen(
                 title = "Current Location",
                 snippet = "This is My Current Location"
             )
+            activities.forEach {
+                val position = LatLng(it.latitude,it.longitude)
+                MarkerComposable (
+                    state = MarkerState(position = position),
+                    title = it.title,
+                    snippet = it.description
+                ) { CustomMarker() }
+            }
+
         }
     }}
 

@@ -22,19 +22,13 @@ private val LightColorScheme = lightColorScheme(
     secondary = SecondaryPurple,
     tertiary = TertiaryPurple
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
-val startGradientColor = Color(0xFF1e88e5)
-val endGradientColor = Color(0xFF005cb2)
 
+)
+val startGradientColor = Color(0xFF906BCE)
+val endGradientColor = Color(0xFF5B1CA4)
+
+val mStartGradientColor = Color(0xFF906BCE)
+val mEndGradientColor = Color(0xFF5B1CA4)
 @Composable
 fun ImBoredJPCTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

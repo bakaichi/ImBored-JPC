@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ie.setu.imbored.R
 import ie.setu.imbored.models.ActivityModel
 import ie.setu.imbored.ui.screens.contribute.ContributeViewModel
+import ie.setu.imbored.ui.screens.map.MapViewModel
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 import timber.log.Timber
 
@@ -28,9 +29,19 @@ fun ContributeButton(
     modifier: Modifier = Modifier,
     activity: ActivityModel,
     contributeViewModel: ContributeViewModel = hiltViewModel(),
+    mapViewModel: MapViewModel = hiltViewModel(),
     onTotalContributedChange: (Int) -> Unit
 ) {
     var totalContributed by remember { mutableIntStateOf(0) }
+
+    val locationLatLng = mapViewModel.currentLatLng.collectAsState().value
+    LaunchedEffect(mapViewModel.currentLatLng){
+        mapViewModel.getLocationUpdates()
+    }
+
+    Timber.i("DONATE BUTTON LAT/LNG COORDINATES " +
+            "lat/Lng: " + "$locationLatLng ")
+
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -43,7 +54,12 @@ fun ContributeButton(
                 totalContributed += activity.contributionAmount
                 onTotalContributedChange(totalContributed)
 
-                contributeViewModel.insert(activity)
+                val activityLatLng = activity.copy(
+                    latitude = locationLatLng.latitude,
+                    longitude = locationLatLng.longitude
+                )
+                contributeViewModel.insert(activityLatLng)
+
 
                 Timber.i("Activity added: $activity")
                 Timber.i("Total contributed amount: $totalContributed")
