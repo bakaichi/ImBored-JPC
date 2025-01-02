@@ -82,4 +82,10 @@ class FirestoreRepository
             .document(activityId)
             .delete().await()
     }
+
+    override suspend fun getAllActivities(): Activities {
+        return firestore.collection(ACTIVITY_COLLECTION)
+            .dataObjects()
+    }
+
 }

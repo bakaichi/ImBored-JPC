@@ -1,11 +1,9 @@
 package ie.setu.imbored.ui.screens.home
 
 import android.Manifest
-import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,16 +22,15 @@ import ie.setu.imbored.navigation.userSignedOutDestinations
 import ie.setu.imbored.ui.components.general.BottomAppBarProvider
 import ie.setu.imbored.ui.components.general.TopAppBarProvider
 import ie.setu.imbored.ui.screens.map.MapViewModel
-import timber.log.Timber
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 
 @OptIn(ExperimentalPermissionsApi::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier,
-               homeViewModel: HomeViewModel = hiltViewModel(),
-               mapViewModel: MapViewModel = hiltViewModel(),
-               navController: NavHostController = rememberNavController(),
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    mapViewModel: MapViewModel = hiltViewModel(),
+    navController: NavHostController = rememberNavController(),
 ) {
     val currentNavBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentNavBackStackEntry?.destination
@@ -49,6 +46,7 @@ fun HomeScreen(modifier: Modifier = Modifier,
     val userDestinations = if (!isActiveSession)
         userSignedOutDestinations
     else bottomAppBarDestinations
+
     val locationPermissions = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -65,22 +63,31 @@ fun HomeScreen(modifier: Modifier = Modifier,
         }
     }
 
+    val isShowAllActivities = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+
     Scaffold(
         modifier = modifier,
-        topBar = { TopAppBarProvider(
-            navController = navController,
-            currentScreen = currentBottomScreen,
-            canNavigateBack = navController.previousBackStackEntry != null,
-            email = userEmail!!,
-            name = userName!!
-        ) { navController.navigateUp() }
+        topBar = {
+            TopAppBarProvider(
+                navController = navController,
+                currentScreen = currentBottomScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                email = userEmail,
+                name = userName,
+                isShowAllActivities = isShowAllActivities,
+                onToggleChange = { isChecked ->
+                    isShowAllActivities.value = isChecked
+                }
+            ) { navController.navigateUp()
+            }
         },
         content = { paddingValues ->
             NavHostProvider(
                 modifier = modifier,
                 navController = navController,
                 startDestination = startScreen.route,
-                paddingValues = paddingValues
+                paddingValues = paddingValues,
+                isShowAllActivities = isShowAllActivities
             )
         },
         bottomBar = {

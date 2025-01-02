@@ -1,5 +1,6 @@
 package ie.setu.imbored.ui.components.general
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +36,8 @@ fun TopAppBarProvider(
     canNavigateBack: Boolean,
     email: String,
     name: String,
+    isShowAllActivities: MutableState<Boolean>,
+    onToggleChange: (Boolean) -> Unit,
     navigateUp: () -> Unit = {}
 ) {
     TopAppBar(
@@ -85,21 +89,29 @@ fun TopAppBarProvider(
             }
         },
         actions = {
-            DropDownMenu(navController  = navController)
+            ToggleButton(
+                isChecked = isShowAllActivities,
+                onCheckedChange = onToggleChange
+            )
         }
     )
 }
 
+
+@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
 fun TopAppBarPreview() {
+    val isShowAllActivities = androidx.compose.runtime.mutableStateOf(false)
     ImBoredJPCTheme {
         TopAppBarProvider(
             navController = rememberNavController(),
             currentScreen = Contribute,
             canNavigateBack = true,
             email = "example@imbored.com",
-            name = "Test User"
+            name = "Test User",
+            isShowAllActivities = isShowAllActivities,
+            onToggleChange = { isChecked -> isShowAllActivities.value = isChecked }
         )
     }
 }

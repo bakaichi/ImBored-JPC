@@ -50,6 +50,23 @@ class ReportViewModel @Inject constructor(
             }
         }
     }
+    fun getAllActivities() {
+        viewModelScope.launch {
+            try {
+                isloading.value = true
+                repository.getAllActivities().collect { items -> // get all activities
+                    _activities.value = items
+                    iserror.value = false
+                    isloading.value = false
+                }
+            } catch (e: Exception) {
+                iserror.value = true
+                isloading.value = false
+                error.value = e
+            }
+        }
+    }
+
 
     fun deleteActivity(activity: ActivityModel)
             = viewModelScope.launch {

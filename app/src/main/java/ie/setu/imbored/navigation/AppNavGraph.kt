@@ -3,6 +3,7 @@ package ie.setu.imbored.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,7 +22,8 @@ fun NavHostProvider(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    isShowAllActivities: MutableState<Boolean>
 ) {
     NavHost(
         navController = navController,
@@ -51,14 +53,15 @@ fun NavHostProvider(
 
         // Report Screen
         composable(route = Report.route) {
-            //call our 'Report' Screen Here
-            ReportScreen(modifier = modifier,
-                onClickDetails = {
-                        activityId : String ->
+            ReportScreen(
+                modifier = modifier,
+                onClickDetails = { activityId: String ->
                     navController.navigateToActivityDetails(activityId)
                 },
+                isShowAllActivities = isShowAllActivities
             )
         }
+
         // Contribute Screen
         composable(route = "contribute") {
             ContributeScreen(modifier = modifier)
@@ -75,6 +78,7 @@ fun NavHostProvider(
                 activityId = idArg
             )
         }
+
         // Profile Screen with Logout Logic
         composable(route = Profile.route) {
             ProfileScreen(
@@ -86,13 +90,14 @@ fun NavHostProvider(
                 },
             )
         }
+
+        // Map Screen
         composable(route = Map.route) {
-            //call our 'Map' Screen Here
             MapScreen()
         }
-
     }
 }
+
 private fun NavHostController.navigateToActivityDetails(activityId: String) {
     this.navigate("details/$activityId")
 }
