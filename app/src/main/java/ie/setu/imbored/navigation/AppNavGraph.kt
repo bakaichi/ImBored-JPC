@@ -93,7 +93,9 @@ fun NavHostProvider(
 
         // Map Screen
         composable(route = Map.route) {
-            MapScreen()
+            MapScreen(
+                isShowAllActivities = isShowAllActivities
+            )
         }
     }
 }

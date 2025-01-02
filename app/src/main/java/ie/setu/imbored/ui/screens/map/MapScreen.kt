@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +31,8 @@ import timber.log.Timber
 @Composable
 fun MapScreen(
     mapViewModel: MapViewModel = hiltViewModel(),
-    reportViewModel: ReportViewModel = hiltViewModel()
+    reportViewModel: ReportViewModel = hiltViewModel(),
+    isShowAllActivities: MutableState<Boolean>
     ) {
     val uiSettings by remember { mutableStateOf(MapUiSettings(
         myLocationButtonEnabled = true,
@@ -53,6 +55,13 @@ fun MapScreen(
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(currentLocation, 14f)
+    }
+    LaunchedEffect(isShowAllActivities.value) {
+        if (isShowAllActivities.value) {
+            reportViewModel.getAllActivities()
+        } else {
+            reportViewModel.getActivities()
+        }
     }
     LaunchedEffect(currentLocation){
         mapViewModel.getLocationUpdates()
@@ -88,7 +97,7 @@ fun MapScreen(
 @Composable
 fun MapScreenPreview() {
     ImBoredJPCTheme {
-        MapScreen( )
+        MapScreen( isShowAllActivities = remember { mutableStateOf(false) })
     }
 }
 
