@@ -143,7 +143,8 @@ fun ContributeScreen(
             ),
             contributeViewModel = contributeViewModel,
             mapViewModel = mapViewModel,
-            onTotalContributedChange = { /* TBA */ }
+            onTotalContributedChange = { /* TBA */ },
+            navController = navController
         )
     }
 }

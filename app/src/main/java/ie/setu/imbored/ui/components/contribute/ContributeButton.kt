@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.google.android.gms.maps.model.LatLng
 import ie.setu.imbored.R
 import ie.setu.imbored.models.ActivityModel
@@ -29,6 +30,7 @@ fun ContributeButton(
     activity: ActivityModel,
     contributeViewModel: ContributeViewModel,
     mapViewModel: MapViewModel,
+    navController: NavController,
     onTotalContributedChange: (Int) -> Unit
 ) {
     var totalContributed by remember { mutableIntStateOf(0) }
@@ -72,7 +74,7 @@ fun ContributeButton(
                     longitude = finalLatLng.longitude
                 )
                 contributeViewModel.insert(activityWithLatLng)
-
+                navController.navigate("report")
                 Timber.i("Activity added: $activityWithLatLng")
                 Timber.i("Total contributed amount: $totalContributed")
             },
