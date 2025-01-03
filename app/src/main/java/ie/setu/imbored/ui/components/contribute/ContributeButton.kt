@@ -13,10 +13,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.gms.maps.model.LatLng
 import ie.setu.imbored.R
 import ie.setu.imbored.models.ActivityModel
 import ie.setu.imbored.ui.screens.contribute.ContributeViewModel
@@ -28,20 +27,33 @@ import timber.log.Timber
 fun ContributeButton(
     modifier: Modifier = Modifier,
     activity: ActivityModel,
-    contributeViewModel: ContributeViewModel = hiltViewModel(),
-    mapViewModel: MapViewModel = hiltViewModel(),
+    contributeViewModel: ContributeViewModel,
+    mapViewModel: MapViewModel,
     onTotalContributedChange: (Int) -> Unit
 ) {
     var totalContributed by remember { mutableIntStateOf(0) }
 
-    val locationLatLng = mapViewModel.currentLatLng.collectAsState().value
-    LaunchedEffect(mapViewModel.currentLatLng){
+    val deviceLocation = mapViewModel.currentLatLng.collectAsState().value
+
+    val chosenLatLng by contributeViewModel.chosenLatLng.collectAsState()
+
+    // if location chosen by a user, use that. otherwise use device location
+    val finalLatLng: LatLng = if (
+        chosenLatLng.latitude != 0.0 || chosenLatLng.longitude != 0.0
+    ) {
+        chosenLatLng
+    } else {
+        deviceLocation
+    }
+
+    LaunchedEffect(mapViewModel.currentLatLng) {
         mapViewModel.getLocationUpdates()
     }
 
-    Timber.i("DONATE BUTTON LAT/LNG COORDINATES " +
-            "lat/Lng: " + "$locationLatLng ")
-
+    Timber.i(
+        "Contribute button LAT/LNG coordinates lat/Lng: $finalLatLng " +
+                "(Chosen=$chosenLatLng, Device=$deviceLocation)"
+    )
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -54,14 +66,14 @@ fun ContributeButton(
                 totalContributed += activity.contributionAmount
                 onTotalContributedChange(totalContributed)
 
-                val activityLatLng = activity.copy(
-                    latitude = locationLatLng.latitude,
-                    longitude = locationLatLng.longitude
+                // Overwrite activity’s lat/lng with final lat/lng:
+                val activityWithLatLng = activity.copy(
+                    latitude = finalLatLng.latitude,
+                    longitude = finalLatLng.longitude
                 )
-                contributeViewModel.insert(activityLatLng)
+                contributeViewModel.insert(activityWithLatLng)
 
-
-                Timber.i("Activity added: $activity")
+                Timber.i("Activity added: $activityWithLatLng")
                 Timber.i("Total contributed amount: $totalContributed")
             },
             elevation = ButtonDefaults.buttonElevation(20.dp)
@@ -89,7 +101,6 @@ fun ContributeButton(
                 ) {
                     append(stringResource(R.string.total) + " ")
                 }
-
                 withStyle(
                     style = SpanStyle(
                         fontWeight = FontWeight.Bold,
@@ -104,16 +115,4 @@ fun ContributeButton(
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun ContributeButtonPreview() {
-    ImBoredJPCTheme {
-        ContributeButton(
-            modifier = Modifier,
-            activity = ActivityModel(),
-            onTotalContributedChange = {}
-        )
-    }
-}
 

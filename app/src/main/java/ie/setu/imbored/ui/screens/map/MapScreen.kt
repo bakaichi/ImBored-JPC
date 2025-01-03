@@ -33,7 +33,7 @@ fun MapScreen(
     mapViewModel: MapViewModel = hiltViewModel(),
     reportViewModel: ReportViewModel = hiltViewModel(),
     isShowAllActivities: MutableState<Boolean>
-    ) {
+) {
     val uiSettings by remember { mutableStateOf(MapUiSettings(
         myLocationButtonEnabled = true,
         compassEnabled = true,

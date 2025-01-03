@@ -12,22 +12,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import ie.setu.imbored.models.ActivityModel
-import ie.setu.imbored.models.fakeActivities
 import ie.setu.imbored.ui.components.contribute.*
+import ie.setu.imbored.ui.screens.map.MapViewModel
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
 
 @SuppressLint("AutoboxingStateCreation")
 @Composable
 fun ContributeScreen(
     modifier: Modifier = Modifier,
-    contributeViewModel: ContributeViewModel = hiltViewModel()
+    navController: NavHostController = rememberNavController(),
+    contributeViewModel: ContributeViewModel = hiltViewModel(),
+    mapViewModel: MapViewModel = hiltViewModel()
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Social") }
     var dateTime by remember { mutableStateOf("") }
     var capacity by remember { mutableIntStateOf(0) }
+    val chosenLatLng by contributeViewModel.chosenLatLng.collectAsState()
 
     Column(
         modifier = modifier
@@ -63,7 +68,6 @@ fun ContributeScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Row for Category and Capacity Pickers
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -108,6 +112,23 @@ fun ContributeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // "Set Location" button, while showing lat and lng
+        Button(
+            onClick = {
+                navController.navigate("locationPicker")
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Set Location")
+        }
+        Text(
+            text = "Chosen Location: " +
+                    "Lat=${"%.4f".format(chosenLatLng.latitude)}, " +
+                    "Lng=${"%.4f".format(chosenLatLng.longitude)}"
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Contribute Button
         ContributeButton(
             modifier = Modifier.fillMaxWidth(),
@@ -117,8 +138,12 @@ fun ContributeScreen(
                 category = selectedCategory,
                 dateTime = dateTime,
                 capacity = capacity,
+                latitude = chosenLatLng.latitude,
+                longitude = chosenLatLng.longitude
             ),
-            onTotalContributedChange = { /* Handle Contribution Logic */ }
+            contributeViewModel = contributeViewModel,
+            mapViewModel = mapViewModel,
+            onTotalContributedChange = { /* TBA */ }
         )
     }
 }

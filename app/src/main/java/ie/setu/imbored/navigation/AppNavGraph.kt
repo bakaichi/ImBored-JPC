@@ -4,11 +4,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ie.setu.imbored.ui.screens.contribute.ContributeScreen
+import ie.setu.imbored.ui.screens.contribute.ContributeViewModel
+import ie.setu.imbored.ui.screens.contribute.LocationPickerScreen
 import ie.setu.imbored.ui.screens.details.DetailsScreen
 import ie.setu.imbored.ui.screens.home.HomeScreen
 import ie.setu.imbored.ui.screens.login.LoginScreen
@@ -63,8 +67,12 @@ fun NavHostProvider(
         }
 
         // Contribute Screen
-        composable(route = "contribute") {
-            ContributeScreen(modifier = modifier)
+        composable(route = "contribute") { backStackEntry ->
+            val contributeViewModel = hiltViewModel<ContributeViewModel>(backStackEntry)
+            ContributeScreen(
+                navController = navController,
+                contributeViewModel = contributeViewModel
+            )
         }
 
         // Details Screen
@@ -97,6 +105,21 @@ fun NavHostProvider(
                 isShowAllActivities = isShowAllActivities
             )
         }
+
+        composable(route = "locationPicker") {
+            val parentEntry = remember(navController) {
+                navController.getBackStackEntry("contribute")
+            }
+            val contributeViewModel = hiltViewModel<ContributeViewModel>(parentEntry)
+
+            LocationPickerScreen(
+                onLocationSelected = { latLng ->
+                    contributeViewModel.setChosenLatLng(latLng)
+                    navController.popBackStack()
+                }
+            )
+        }
+
     }
 }
 
