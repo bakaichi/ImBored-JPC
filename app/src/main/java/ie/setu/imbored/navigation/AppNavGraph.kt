@@ -27,6 +27,7 @@ fun NavHostProvider(
     navController: NavHostController,
     startDestination: String,
     paddingValues: PaddingValues,
+    searchQuery: String,
     isShowAllActivities: MutableState<Boolean>
 ) {
     NavHost(
@@ -62,6 +63,7 @@ fun NavHostProvider(
                 onClickDetails = { activityId: String ->
                     navController.navigateToActivityDetails(activityId)
                 },
+                searchQuery = searchQuery,
                 isShowAllActivities = isShowAllActivities
             )
         }

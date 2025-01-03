@@ -26,6 +26,7 @@ import ie.setu.imbored.ui.components.general.ShowLoader
 @Composable
 fun ReportScreen(
     modifier: Modifier = Modifier,
+    searchQuery: String = "",
     onClickDetails: (String) -> Unit,
     reportViewModel: ReportViewModel = hiltViewModel(),
     isShowAllActivities: MutableState<Boolean>
@@ -35,7 +36,13 @@ fun ReportScreen(
     val error = reportViewModel.error.value
     val isLoading = reportViewModel.isloading.value
 
-    LaunchedEffect (isShowAllActivities.value) {
+    // Filter activities based on query (search)
+    val filteredActivities = activities.filter {
+        it.title.contains(searchQuery, ignoreCase = true) ||
+                it.description.contains(searchQuery, ignoreCase = true)
+    }
+
+    LaunchedEffect(isShowAllActivities.value) {
         if (isShowAllActivities.value) {
             reportViewModel.getAllActivities()
         } else {
@@ -44,29 +51,36 @@ fun ReportScreen(
     }
 
     Column(modifier = modifier.padding(16.dp)) {
-        if (isLoading) {
-            ShowLoader("Loading Activities...")
-        } else if (isError) {
-            ShowError(
-                headline = "Error loading activities",
-                subtitle = error?.message ?: "Unknown error",
-                onClick = { reportViewModel.getActivities() }
-            )
-        } else {
-            ActivityCardList(
-                activities = activities,
-                onClickDetails = onClickDetails,
-                onDeleteActivity = { activity ->
-                    reportViewModel.deleteActivity(activity)
-                }
-            )
+        when {
+            isLoading -> {
+                ShowLoader("Loading Activities...")
+            }
+            isError -> {
+                ShowError(
+                    headline = "Error loading activities",
+                    subtitle = error?.message ?: "Unknown error",
+                    onClick = { reportViewModel.getActivities() }
+                )
+            }
+            filteredActivities.isEmpty() -> {
+                Text(
+                    text = "No activities found.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
+            else -> {
+                ActivityCardList(
+                    activities = filteredActivities,
+                    onClickDetails = onClickDetails,
+                    onDeleteActivity = { activity ->
+                        reportViewModel.deleteActivity(activity)
+                    }
+                )
+            }
         }
     }
 }
-
-
-
-
 
 @Preview(showBackground = true)
 @Composable
