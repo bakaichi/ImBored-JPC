@@ -2,12 +2,16 @@ package ie.setu.imbored.ui.components.contribute
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.graphics.drawable.ColorDrawable
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
+import android.view.View
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import ie.setu.imbored.ui.theme.ImBoredJPCTheme
@@ -21,6 +25,7 @@ fun DateTimePicker(
     val context = LocalContext.current
     var dateTime by remember { mutableStateOf("Select Date/Time") } //Button name
     val calendar = Calendar.getInstance()
+    val dialogColor = MaterialTheme.colorScheme.primary.toArgb()
 
     // Show each picker
     var showDatePicker by remember { mutableStateOf(false) }
@@ -40,7 +45,14 @@ fun DateTimePicker(
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+        ).apply {
+            // set the header color
+            setOnShowListener {
+                val headerViewId = context.resources.getIdentifier("date_picker_header", "id", "android")
+                val headerView = window?.decorView?.findViewById<View>(headerViewId)
+                headerView?.setBackgroundColor(dialogColor)
+            }
+        }.show()
     }
 
     // Show Time Picker
@@ -58,7 +70,14 @@ fun DateTimePicker(
             calendar.get(Calendar.HOUR_OF_DAY),
             calendar.get(Calendar.MINUTE),
             true
-        ).show()
+        ).apply {
+            // header color
+            setOnShowListener {
+                val headerViewId = context.resources.getIdentifier("time_header", "id", "android")
+                val headerView = window?.decorView?.findViewById<View>(headerViewId)
+                headerView?.setBackgroundColor(dialogColor)
+            }
+        }.show()
     }
 
     // Button to Trigger Date/Time Picker
