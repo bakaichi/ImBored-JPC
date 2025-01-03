@@ -48,10 +48,10 @@ You can log in using the following test account:
 - **Firebase Authentication**:
 -**Firebase Firestore, DB, Auth**: Stores user activities and allows for real-time updates. All while managing uploaded images and registered users with auth service.
 
-####Coil
+#### Coil
 **Loading images**: loading images into Compose components.
 
-####Compose
+#### Compose
 -**Compose Material3**: Used for UI components.
 -**Navigation Compose**: Enables navigation between screens.
 -**State Management**: Handles UI states dynamically.
