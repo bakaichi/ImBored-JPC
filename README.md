@@ -10,7 +10,7 @@
 
 ## 📝 Project Description
 
-The **ImBored App** The ImBored App is an engaging platform that enables users to explore and manage activities with filtering and location-based mapping. It integrates Firebase Authentication for user security and Google Maps for location management. Users can create, edit, view, and filter activities with various customization options.
+The **ImBored App** The ImBored App is an engaging platform that enables users to explore and manage activities with filtering and location-based mapping. It integrates Firebase Authentication for user security and Google Maps for location management. Users can create, edit, view, and filter activities with various options.
 
 ## 🔑 Test Account
 
