@@ -19,23 +19,44 @@ You can log in using the following test account:
 - **Email:** homer@simpson.com
 - **Password:** secret
 
-## 📚 Features
+## 📚 Core Functionality
 
-### General Features
+### 🥦 General Features
 - **Activity Management**: Users can create, edit, view, and delete activities.
-- **Activity Listing**: View a list of activities with sorting and filtering options.
-- **Interactive Map**: Activities are displayed on Google Maps with clickable markers for location selection and for viewing markers contents.
+- **Activity Listing**: Creation, Editing, and Deletion: Users can create activities by providing details like title, description, category, date, time, capacity, and location. These activities can also be edited or deleted.
+- **Interactive Map**: Activities are displayed on Google Maps with clickable markers for location selection. Activities are linked with locations, enabling users to set and view activity locations on an interactive map.
 - **Toggle button**: To view not only your own but other people's events.
+- **Sorting**:  Activities can besorted by dates added and dates modified in ascending or descending orders. Search functionality is also available for quick access.
 
-### Authentication
+### 🤓 Authentication
 - **Firebase Authentication**: Secure login and registration using email and passwor or Google sign in.
 - **Persistent Sessions**: Automatically keeps users logged in until they explicitly log out, Firebase DB and Storage for users and their profile pictures.
 
-### Location & Map Features
+### 📍 Location & Map Features
 - **Google Maps Integration**: View activity locations on the map, with markers and details.
 - **Google Maps Activities**: Add your own activities to google maps via form.
 - **Current Location**: Displays the user's current location with a dedicated marker.
 - **Location Picker**: Users can select activity locations via a clickable marker on Google Maps.
+
+### 🍉 API's Used
+
+##### 🧑🏻‍🔬 Google
+- **Google Maps API**:  Provides interactive maps for activity location selection and visualization.
+- **Google Signin**: Enables secure Google Sign-In for a convenient login experience.
+
+##### Firebase
+- **Firebase Authentication**:
+-**Firebase Firestore, DB, Auth**: Stores user activities and allows for real-time updates. All while managing uploaded images and registered users with auth service.
+
+####Coil
+**Loading images**: loading images into Compose components.
+
+####Compose
+-**Compose Material3**: Used for UI components.
+-**Navigation Compose**: Enables navigation between screens.
+-**State Management**: Handles UI states dynamically.
+
+
 
 
 ## 📦 Future Work
