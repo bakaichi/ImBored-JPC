@@ -50,8 +50,10 @@ fun HomeScreen(
     val userEmail = if (isActiveSession) currentUser?.email ?: "Unknown Email" else ""
     val userName = if (isActiveSession) currentUser?.displayName ?: "User" else ""
 
-    // State for the search query (used only in the Report screen)
     val searchQuery = remember { mutableStateOf("") }
+
+    val currentSortField = remember { mutableStateOf("Date Modified") }
+    val isAscending = remember { mutableStateOf(true) }
 
     val userDestinations = if (!isActiveSession)
         userSignedOutDestinations
@@ -82,13 +84,18 @@ fun HomeScreen(
                 navController = navController,
                 currentScreen = currentBottomScreen,
                 canNavigateBack = navController.previousBackStackEntry != null,
-                email = userEmail,
                 name = userName,
+                email = userEmail,
                 isShowAllActivities = isShowAllActivities,
-                onToggleChange = { isChecked ->
-                    isShowAllActivities.value = isChecked
-                }
-            ) { navController.navigateUp() }
+                currentSortField = currentSortField,
+                isAscending = isAscending,
+                onToggleChange = { isChecked -> isShowAllActivities.value = isChecked },
+                onSortChange = { field, ascending ->
+                    currentSortField.value = field
+                    isAscending.value = ascending
+                },
+                navigateUp = { navController.navigateUp() }
+            )
         },
         content = { paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {
@@ -107,7 +114,9 @@ fun HomeScreen(
                     startDestination = startScreen.route,
                     paddingValues = PaddingValues(0.dp),
                     isShowAllActivities = isShowAllActivities,
-                    searchQuery = searchQuery.value
+                    searchQuery = searchQuery.value,
+                    currentSortField = currentSortField.value,
+                    isAscending = isAscending.value
                 )
             }
         },
@@ -120,7 +129,6 @@ fun HomeScreen(
         }
     )
 }
-
 
 @Preview(showBackground = true)
 @Composable

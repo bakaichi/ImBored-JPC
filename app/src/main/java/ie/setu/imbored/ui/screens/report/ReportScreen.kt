@@ -27,6 +27,8 @@ import ie.setu.imbored.ui.components.general.ShowLoader
 fun ReportScreen(
     modifier: Modifier = Modifier,
     searchQuery: String = "",
+    currentSortField: String = "Date Modified",
+    isAscending: Boolean = true,
     onClickDetails: (String) -> Unit,
     reportViewModel: ReportViewModel = hiltViewModel(),
     isShowAllActivities: MutableState<Boolean>
@@ -41,6 +43,21 @@ fun ReportScreen(
         it.title.contains(searchQuery, ignoreCase = true) ||
                 it.description.contains(searchQuery, ignoreCase = true)
     }
+
+    // Sort activities based on selected sort field and order
+    val sortedActivities = filteredActivities.sortedWith(
+        when (currentSortField) {
+            "Date Modified" -> {
+                if (isAscending) compareBy { it.dateModified }
+                else compareByDescending { it.dateModified }
+            }
+            "Date Added" -> {
+                if (isAscending) compareBy { it.dateContributed }
+                else compareByDescending { it.dateContributed }
+            }
+            else -> compareBy { it.title }
+        }
+    )
 
     LaunchedEffect(isShowAllActivities.value) {
         if (isShowAllActivities.value) {
@@ -62,7 +79,7 @@ fun ReportScreen(
                     onClick = { reportViewModel.getActivities() }
                 )
             }
-            filteredActivities.isEmpty() -> {
+            sortedActivities.isEmpty() -> {
                 Text(
                     text = "No activities found.",
                     style = MaterialTheme.typography.bodyLarge,
@@ -71,7 +88,7 @@ fun ReportScreen(
             }
             else -> {
                 ActivityCardList(
-                    activities = filteredActivities,
+                    activities = sortedActivities,
                     onClickDetails = onClickDetails,
                     onDeleteActivity = { activity ->
                         reportViewModel.deleteActivity(activity)

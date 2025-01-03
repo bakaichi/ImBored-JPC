@@ -28,6 +28,8 @@ fun NavHostProvider(
     startDestination: String,
     paddingValues: PaddingValues,
     searchQuery: String,
+    currentSortField: String,
+    isAscending: Boolean,
     isShowAllActivities: MutableState<Boolean>
 ) {
     NavHost(
@@ -64,6 +66,8 @@ fun NavHostProvider(
                     navController.navigateToActivityDetails(activityId)
                 },
                 searchQuery = searchQuery,
+                currentSortField = currentSortField,
+                isAscending = isAscending,
                 isShowAllActivities = isShowAllActivities
             )
         }
@@ -108,6 +112,7 @@ fun NavHostProvider(
             )
         }
 
+        // Location Picker Screen
         composable(route = "locationPicker") {
             val parentEntry = remember(navController) {
                 navController.getBackStackEntry("contribute")

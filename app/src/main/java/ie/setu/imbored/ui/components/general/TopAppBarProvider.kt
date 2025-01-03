@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,6 +18,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -37,9 +43,14 @@ fun TopAppBarProvider(
     email: String,
     name: String,
     isShowAllActivities: MutableState<Boolean>,
+    currentSortField: MutableState<String>,
+    isAscending: MutableState<Boolean>,
     onToggleChange: (Boolean) -> Unit,
+    onSortChange: (String, Boolean) -> Unit,
     navigateUp: () -> Unit = {}
 ) {
+    var isMenuExpanded by remember { mutableStateOf(false) }
+
     TopAppBar(
         title = {
             Column {
@@ -89,10 +100,56 @@ fun TopAppBarProvider(
             }
         },
         actions = {
+            // Toggle Button
             ToggleButton(
                 isChecked = isShowAllActivities,
                 onCheckedChange = onToggleChange
             )
+
+            // Sorting
+            IconButton(onClick = { isMenuExpanded = true }) {
+                Icon(
+                    imageVector = if (isAscending.value) Icons.Default.ArrowUpward
+                    else Icons.Default.ArrowDownward,
+                    contentDescription = "Sort Order",
+                    tint = Color.White
+                )
+            }
+
+            // Dropdown Menu for Sorting
+            androidx.compose.material3.DropdownMenu(
+                expanded = isMenuExpanded,
+                onDismissRequest = { isMenuExpanded = false }
+            ) {
+                androidx.compose.material3.DropdownMenuItem(
+                    text = { Text("Sort by Date Added") },
+                    onClick = {
+                        currentSortField.value = "Date Added"
+                        onSortChange(currentSortField.value, isAscending.value)
+                        isMenuExpanded = false
+                    }
+                )
+                androidx.compose.material3.DropdownMenuItem(
+                    text = { Text("Sort by Date Modified") },
+                    onClick = {
+                        currentSortField.value = "Date Modified"
+                        onSortChange(currentSortField.value, isAscending.value)
+                        isMenuExpanded = false
+                    }
+                )
+                androidx.compose.material3.DropdownMenuItem(
+                    text = {
+                        Text(
+                            if (isAscending.value) "Descending Order" else "Ascending Order"
+                        )
+                    },
+                    onClick = {
+                        isAscending.value = !isAscending.value
+                        onSortChange(currentSortField.value, isAscending.value)
+                        isMenuExpanded = false
+                    }
+                )
+            }
         }
     )
 }
@@ -102,7 +159,10 @@ fun TopAppBarProvider(
 @Preview(showBackground = true)
 @Composable
 fun TopAppBarPreview() {
-    val isShowAllActivities = androidx.compose.runtime.mutableStateOf(false)
+    val isShowAllActivities = mutableStateOf(false)
+    val currentSortField = mutableStateOf("Date Added")
+    val isAscending = mutableStateOf(true)
+
     ImBoredJPCTheme {
         TopAppBarProvider(
             navController = rememberNavController(),
@@ -111,7 +171,13 @@ fun TopAppBarPreview() {
             email = "example@imbored.com",
             name = "Test User",
             isShowAllActivities = isShowAllActivities,
-            onToggleChange = { isChecked -> isShowAllActivities.value = isChecked }
+            currentSortField = currentSortField,
+            isAscending = isAscending,
+            onToggleChange = { isChecked -> isShowAllActivities.value = isChecked },
+            onSortChange = { field, ascending ->
+                currentSortField.value = field
+                isAscending.value = ascending
+            }
         )
     }
 }
