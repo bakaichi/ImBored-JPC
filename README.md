@@ -52,9 +52,9 @@ You can log in using the following test account:
 **Loading images**: loading images into Compose components.
 
 #### Compose
--**Compose Material3**: Used for UI components.
--**Navigation Compose**: Enables navigation between screens.
--**State Management**: Handles UI states dynamically.
+- **Compose Material3**: Used for UI components.
+- **Navigation Compose**: Enables navigation between screens.
+- **State Management**: Handles UI states dynamically.
 
 
 
