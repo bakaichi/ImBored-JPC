@@ -86,10 +86,10 @@ fun NavHostProvider(
             route = Details.route,
             arguments = Details.arguments
         ) { backStackEntry ->
-            val idArg = backStackEntry.arguments?.getString(Details.idArg) ?: ""
+            backStackEntry.arguments?.getString(Details.idArg) ?: ""
             DetailsScreen(
                 modifier = modifier,
-                activityId = idArg
+                navController = navController
             )
         }
 

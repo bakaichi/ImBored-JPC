@@ -2,22 +2,22 @@ package ie.setu.imbored.ui.screens.details
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import ie.setu.imbored.ui.components.contribute.AmountPicker
+import ie.setu.imbored.ui.components.contribute.CategoryPicker
+import ie.setu.imbored.ui.components.contribute.DateTimePicker
 import ie.setu.imbored.ui.components.details.DetailsScreenText
 import ie.setu.imbored.ui.components.details.ReadOnlyTextField
 import ie.setu.imbored.ui.components.general.ShowLoader
@@ -25,16 +25,29 @@ import ie.setu.imbored.ui.components.general.ShowLoader
 @Composable
 fun DetailsScreen(
     modifier: Modifier = Modifier,
-    activityId : String,
-    detailsViewModel: DetailsViewModel = hiltViewModel()
+    detailsViewModel: DetailsViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val activity = detailsViewModel.activity.value
+
+    var description by rememberSaveable { mutableStateOf(activity.description) }
+    var category by rememberSaveable { mutableStateOf(activity.category) }
+    var capacity by rememberSaveable { mutableStateOf(activity.capacity.toString()) }
+    var dateTime by rememberSaveable { mutableStateOf(activity.dateTime ?: "") }
+
+    var onDescriptionChanged by rememberSaveable { mutableStateOf(false) }
+    var onCategoryChanged by rememberSaveable { mutableStateOf(false) }
+    var onCapacityChanged by rememberSaveable { mutableStateOf(false) }
+    var onDateTimeChanged by rememberSaveable { mutableStateOf(false) }
+
+    var isDescriptionError by rememberSaveable { mutableStateOf(false) }
     val errorEmptyMessage = "Description Cannot be Empty..."
     val errorShortMessage = "Description must be at least 2 characters"
-    var description by rememberSaveable { mutableStateOf("") }
-    var onDescriptionChanged by rememberSaveable { mutableStateOf(false) }
-    var isEmptyError by rememberSaveable { mutableStateOf(false) }
-    var isShortError by rememberSaveable { mutableStateOf(false) }
+
+    fun validateDescription(text: String) {
+        isDescriptionError = text.isEmpty() || text.length < 2
+        onDescriptionChanged = !isDescriptionError
+    }
 
     val context = LocalContext.current
     val isError = detailsViewModel.isErr.value
@@ -42,30 +55,76 @@ fun DetailsScreen(
 
     if (isLoading) ShowLoader("Retrieving Activity Details...")
 
-    fun validate(text: String) {
-        isEmptyError = text.isEmpty()
-        isShortError = text.length < 2
-        onDescriptionChanged = !(isEmptyError || isShortError)
-    }
-
     if (isError) {
-        Toast.makeText(context, "Unable to fetch Details at this Time...",
-            Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Unable to fetch Details at this Time...", Toast.LENGTH_SHORT).show()
     } else if (!isLoading) {
         Column(
             modifier = modifier.padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            DetailsScreenText() // Custom Text Header
+            DetailsScreenText()
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp)
             ) {
-                // Read-only Fields
+                // Title
                 ReadOnlyTextField(value = activity.title, label = "Title")
-                ReadOnlyTextField(value = activity.category, label = "Category")
-                ReadOnlyTextField(value = activity.dateTime ?: "No Date/Time", label = "Scheduled Date/Time")
-                ReadOnlyTextField(value = activity.capacity.toString(), label = "Capacity")
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Category and Capacity pickers
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Category",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                        CategoryPicker(
+                            onCategoryChange = {
+                                category = it
+                                onCategoryChanged = true
+                                activity.category = category
+                            }
+                        )
+                    }
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Capacity",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                        AmountPicker(
+                            onCapacityAmountChange = {
+                                capacity = it.toString()
+                                onCapacityChanged = true
+                                activity.capacity = it
+                            }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Date/Time editable
+                Text(
+                    text = "Scheduled Date/Time",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                DateTimePicker(
+                    onDateTimeChange = {
+                        dateTime = it
+                        onDateTimeChanged = true
+                        activity.dateTime = dateTime
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Editable Description Field
                 description = activity.description
@@ -74,36 +133,22 @@ fun DetailsScreen(
                     value = description,
                     onValueChange = {
                         description = it
-                        validate(description)
+                        validateDescription(description)
                         activity.description = description
                     },
                     maxLines = 2,
                     label = { Text(text = "Description") },
-                    isError = isEmptyError || isShortError,
+                    isError = isDescriptionError,
                     supportingText = {
-                        if (isEmptyError) {
+                        if (isDescriptionError) {
                             Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = errorEmptyMessage,
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        } else if (isShortError) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = errorShortMessage,
+                                text = if (description.isEmpty()) errorEmptyMessage else errorShortMessage,
                                 color = MaterialTheme.colorScheme.error
                             )
                         }
                     },
-                    trailingIcon = {
-                        if (isEmptyError || isShortError)
-                            Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
-                        else
-                            Icon(Icons.Default.Edit, contentDescription = "edit", tint = Color.Black)
-                    },
-                    keyboardActions = KeyboardActions { validate(description) },
                     colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.secondary
                     )
                 )
 
@@ -113,22 +158,23 @@ fun DetailsScreen(
                 Button(
                     onClick = {
                         detailsViewModel.updateDescription(activity)
+                        navController.popBackStack()
                         onDescriptionChanged = false
+                        onCategoryChanged = false
+                        onCapacityChanged = false
+                        onDateTimeChanged = false
                     },
-                    elevation = ButtonDefaults.buttonElevation(20.dp),
-                    enabled = onDescriptionChanged
+                    enabled = onDescriptionChanged || onCategoryChanged || onCapacityChanged || onDateTimeChanged
                 ) {
                     Icon(Icons.Default.Save, contentDescription = "Save")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "Save",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        color = Color.White
+                        fontSize = 20.sp
                     )
                 }
             }
         }
     }
 }
-
