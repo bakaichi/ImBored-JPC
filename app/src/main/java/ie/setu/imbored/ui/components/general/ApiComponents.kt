@@ -138,7 +138,7 @@ fun UtilsPreview() {
     ImBoredJPCTheme  {
         ShowError(headline = "Main Error Message",
             subtitle = "more error information", onClick = {})
-        ShowLoader("Trying to Donate...")
+        ShowLoader("Trying to Contribute...")
         //   ShowRefreshList(onClick = {})
     }
 }
